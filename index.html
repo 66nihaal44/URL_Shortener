@@ -4,20 +4,48 @@
 </head>
 <body>
     <div class="container">
-    <h1>Type URL Here</h1>
-    <form id="urlSubmit">
-      <input type="text" name="originalUrl" required />
-      <button type="submit">Generate Shortened URL</button>
-    </form>
-    <div class="display" id="newUrl">Shortened URL shows here.</div>
-  </div>
+        <h1>Type URL Here</h1>
+        <form id="urlSubmit">
+          <input type="text" name="originalUrl" required />
+          <button type="submit">Generate Shortened URL</button>
+        </form>
+        <div class="display" id="urlDisplay">Shortened URL shows here.</div>
+    </div>
 </body>
 <script>
-  const audioUpload = document.getElementById("urlSubmit");
-  const transcript = document.getElementById("newUrl");
+  const urlForm = document.getElementById("urlSubmit");
+  const urlDisplay = document.getElementById("urlDisplay");
   audioUpload.addEventListener("submit", async (a) => {
     a.preventDefault();
-    const textInput = document.querySelector('input[type="text"]');
+    const textInput = form.elements("originalUrl");
+    try {
+        const res = await fetch("https://localhost:5000/shorten", {
+            method: "POST",
+            body: JSON.stringify({
+                url: textInput.value
+            })
+            headers: "Content-Type": "application/json"
+        });
+        if(!res.ok){
+            var backend;
+            try{
+            backendData = await res.json();
+            }
+            catch{
+                backendData = {};
+            }
+            throw new Error(backendData.error || `HTTP error ${res.status}`);
+        }
+        const newUrl = await res.json();
+        if(!newUrl.short_url){
+            throw new Error("No URL recieved");
+        }
+        console.log("response: ", newUrl);
+        urlDisplay.textContent = newUrl.short_url;
+    }
+    catch(err){
+        console.error("Error during generation: ", err.message)
+    }
   });
 </script>
 </html>
