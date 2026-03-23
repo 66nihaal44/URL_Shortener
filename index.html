@@ -23,9 +23,10 @@
             method: "POST",
             body: JSON.stringify({
                 url: textInput.value
-            })
+            }),
             headers: "Content-Type": "application/json"
         });
+        urlDisplay.textContent = "Generating...";
         if(!res.ok){
             var backend;
             try{
