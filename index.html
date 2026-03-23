@@ -17,7 +17,7 @@
   const urlDisplay = document.getElementById("urlDisplay");
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
-    const textInput = urlForm.elements("originalUrl");
+    const textInput = urlForm.elements["originalUrl"];
     try {
         const res = await fetch("https://localhost:5000/shorten", {
             method: "POST",
