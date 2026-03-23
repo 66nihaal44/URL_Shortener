@@ -21,10 +21,10 @@
     try {
         const res = await fetch("https://localhost:5000/shorten", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 url: textInput.value
-            }),
-            headers: "Content-Type": "application/json"
+            })
         });
         urlDisplay.textContent = "Generating...";
         if(!res.ok){
