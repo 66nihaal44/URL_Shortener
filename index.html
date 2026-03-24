@@ -42,7 +42,7 @@
             throw new Error("No URL recieved");
         }
         console.log("response: ", newUrl);
-        urlDisplay.innerHTML = `<a href="${newUrl.short_url}" target="_blank>${data.short_url}</a>`;
+        urlDisplay.innerHTML = `<a href="${newUrl.short_url}" target="_blank>${newUrl.short_url}</a>`;
     }
     catch(err){
         console.error("Error during generation: ", err.message)
