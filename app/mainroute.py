@@ -21,7 +21,7 @@ def shorten():
     exists = session.query(URL).filter_by(original_url=original_url).first()
     if exists:
       return jsonify({
-             "short_url": f"http://localhost:5000/{exists.short_code}"
+             "short_url": f"https://url-shortener-g54n.onrender.com/{exists.short_code}"
              }), 200
     short_code = gen_random_code(session)
     url = URL(original_url=original_url, short_code = short_code)
@@ -31,7 +31,7 @@ def shorten():
   finally:
     session.close()
   return jsonify({
-         "short_url": f"http://localhost:5000/{short_code}"
+         "short_url": f"https://url-shortener-g54n.onrender.com/{short_code}"
          }), 201
 @main.route("/<short_code>")
 def redirect_url(short_code):
