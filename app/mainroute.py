@@ -43,7 +43,7 @@ def redirect_url(short_code):
     if not url:
       return jsonify({
              "error": "URL not found"
-  }          }), 404
+             }), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
       return jsonify({
              "error": "Link expired"
