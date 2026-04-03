@@ -32,11 +32,12 @@
 <script>
   const urlForm = document.getElementById("urlSubmit");
   const urlDisplay = document.getElementById("urlDisplay");
+  const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
     const textInput = urlForm.elements["originalUrl"];
     try {
-        const res = await fetch("https://url-shortener-g54n.onrender.com/shorten", {
+        const res = await fetch(domain_url + "/shorten", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
