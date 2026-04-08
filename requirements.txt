@@ -3,3 +3,4 @@ flask-cors==6.0.2
 psycopg2-binary==2.9.11
 SQLAlchemy==2.0.48
 gunicorn==21.2.0
+redis==7.4.0
