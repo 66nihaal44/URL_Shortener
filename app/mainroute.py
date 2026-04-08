@@ -38,7 +38,7 @@ def shorten():
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 @main.route("/<short_code>")
-def redirect_handler(short_code){
+def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
     url.click_count += 1
@@ -54,7 +54,6 @@ def redirect_handler(short_code){
    click = Click(url_id = url.id)
    redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
    return redirect(url.original_url)
-}
 
 @main.route("/stats/<short_code>")
 def stats(short_code):
