@@ -3,6 +3,7 @@ from . import engine
 from .sqlclass import URL, Click
 from .utility import is_valid_url
 from sqlalchemy import func
+from cache import redis_client
 from datetime import datetime, timezone, timedelta
 import random
 import string
@@ -21,6 +22,7 @@ def shorten():
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
     if exists:
+      redis_client.set(short_code, original_url, ex=3600)
       return jsonify({
              "short_url": f"{domain_url}/{exists.short_code}"
              }), 200
@@ -29,34 +31,30 @@ def shorten():
     session.add(url)
     session.flush()
     session.commit()
+    redis_client.set(short_code, original_url, ex=3600) # redis_client here
   finally:
     session.close()
   return jsonify({
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 @main.route("/<short_code>")
-def redirect_url(short_code):
-  print("Redirect route hit:", short_code)
-  session = engine.SessionLocal()
-  try:
-    url = session.query(URL).filter_by(short_code=short_code).first()
-    print("DB result:", url)
-    if not url:
-      return jsonify({
-             "error": "URL not found"
-             }), 404
-    if url.expires_at and url.expires_at < datetime.utcnow():
-      return jsonify({
-             "error": "Link expired"
-             }), 410
-    destination = url.original_url
+def redirect_handler(short_code){
+  cached_url = redis_client.get(short_code)
+  if cached_url:
     url.click_count += 1
     click = Click(url_id = url.id)
-    session.add(click)
-    session.commit()
-  finally:
-    session.close()
-  return redirect(destination)
+    return redirect(cached_url)
+  url = session.query(URL).filter_by(short_code=short_code).first()
+    print("DB result:", url)
+   if not url:
+    return jsonify({
+           "error": "URL not found"
+           }), 404
+   url.click_count += 1
+   click = Click(url_id = url.id)
+   redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
+   return redirect(url.original_url)
+}
 
 @main.route("/stats/<short_code>")
 def stats(short_code):
@@ -97,13 +95,3 @@ def gen_random_code(session, length = 6):
     exists = session.query(URL).filter_by(short_code=short_code).first()
     if not exists:
       return short_code
-"""def encode_base62(num):
-  if num == 0:
-    return base62[0];
-  arr = [];
-  base = len(base62)
-  while num:
-    num, rem = divmod(num, base)
-    arr.append(base62[rem])
-  arr.reverse()
-  return ''.join(arr)"""
