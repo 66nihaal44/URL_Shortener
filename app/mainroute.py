@@ -41,8 +41,6 @@ def shorten():
 def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
-    url.click_count += 1
-    click = Click(url_id = url.id)
     return redirect(cached_url)
   url = session.query(URL).filter_by(short_code=short_code).first()
   print("DB result:", url)
