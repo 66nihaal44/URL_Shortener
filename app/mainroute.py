@@ -45,7 +45,7 @@ def redirect_handler(short_code):
     click = Click(url_id = url.id)
     return redirect(cached_url)
   url = session.query(URL).filter_by(short_code=short_code).first()
-    print("DB result:", url)
+   print("DB result:", url)
    if not url:
     return jsonify({
            "error": "URL not found"
