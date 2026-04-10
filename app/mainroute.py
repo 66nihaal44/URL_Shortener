@@ -22,7 +22,7 @@ def shorten():
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
     if exists:
-      redis_client.set(short_code, original_url, ex=3600)
+      redis_client.set(exists.short_code, exists.original_url, ex=3600)
       return jsonify({
              "short_url": f"{domain_url}/{exists.short_code}"
              }), 200
