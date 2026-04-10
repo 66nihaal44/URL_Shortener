@@ -2,8 +2,8 @@ from flask import Blueprint, request, redirect, jsonify
 from . import engine
 from .sqlclass import URL, Click
 from .utility import is_valid_url
+from .cache import redis_client
 from sqlalchemy import func
-from cache import redis_client
 from datetime import datetime, timezone, timedelta
 import random
 import string
