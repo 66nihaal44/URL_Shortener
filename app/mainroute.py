@@ -1,8 +1,9 @@
 from flask import Blueprint, request, redirect, jsonify
-from . import engine
+from .engine import engine
 from .sqlclass import URL, Click
 from .utility import is_valid_url
 from .cache import redis_client
+from .asynctasks import log_click
 from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 import random
@@ -41,6 +42,7 @@ def shorten():
 def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
+    log_click(short_code)
     return redirect(cached_url)
   url = session.query(URL).filter_by(short_code=short_code).first()
   print("DB result:", url)
@@ -51,6 +53,7 @@ def redirect_handler(short_code):
   url.click_count += 1
   click = Click(url_id = url.id)
   redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
+  log_click(short_code)
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
