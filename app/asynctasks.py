@@ -11,7 +11,7 @@ def log_click_func(short_code):
       click = Click(url_id=url.id)
       session.add(click)
       session.commit()
-   finally:
+  finally:
     session.close()
 
 def log_click(short_code):
