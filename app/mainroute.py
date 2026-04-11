@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, jsonify
-from .engine import engine
+from . import engine
 from .sqlclass import URL, Click
 from .utility import is_valid_url
 from .cache import redis_client
