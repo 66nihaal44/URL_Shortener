@@ -1,9 +1,9 @@
 from threading import Thread
-from .engine import SessionLocal
+from . import engine
 from .sqlclass import URL, Click
 
 def log_click_func(short_code):
-  session = SessionLocal()
+  session = engine.SessionLocal()
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
     if url:
