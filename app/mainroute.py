@@ -44,16 +44,18 @@ def redirect_handler(short_code):
   if cached_url:
     log_click(short_code)
     return redirect(cached_url)
-  url = session.query(URL).filter_by(short_code=short_code).first()
-  print("DB result:", url)
-  if not url:
-   return jsonify({
-          "error": "URL not found"
-          }), 404
-  url.click_count += 1
-  click = Click(url_id = url.id)
-  redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
-  log_click(short_code)
+  session = engine.SessionLocal()
+  try:
+    url = session.query(URL).filter_by(short_code=short_code).first()
+    print("DB result:", url)
+    if not url:
+     return jsonify({
+            "error": "URL not found"
+            }), 404
+    redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
+    log_click(short_code)
+  finally:
+    session.close()
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
