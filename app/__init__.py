@@ -8,7 +8,7 @@ from flask_limiter import Limiter
 def get_client_id():
   forwarded_for = request.headers.get("X-Forwarded-For")
   if forwarded_for:
-    return forwarded_for.split(",")[0].strip[]
+    return forwarded_for.split(",")[0].strip()
   return request.remote_addr
 
 limiter = Limiter(
