@@ -1,5 +1,6 @@
 from flask import Blueprint, request, redirect, jsonify
 from . import engine
+from . import limiter
 from .sqlclass import URL, Click
 from .utility import is_valid_url
 from .cache import redis_client
@@ -12,6 +13,7 @@ import string
 domain_url = "https://url-shortener-g54n.onrender.com"
 main = Blueprint("main", __name__)
 @main.route("/shorten", methods=["POST"])
+@limiter.limit("10 per minute, 100 per hour")
 def shorten():
   data = request.json
   if not data or "url" not in data:
@@ -39,6 +41,7 @@ def shorten():
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 @main.route("/<short_code>")
+@limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
@@ -59,6 +62,7 @@ def redirect_handler(short_code):
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
+@limiter.limit("30 per minute, 300 per hour")
 def stats(short_code):
   session = engine.SessionLocal()
   try:
