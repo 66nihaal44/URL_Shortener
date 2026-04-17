@@ -14,7 +14,7 @@ def get_client_id():
 limiter = Limiter(
   key_func=get_client_id,
   storage_uri=os.getenv("REDIS_URL"),
-  strategy="fixed-window"
+  strategy="fixed-window",
   default_limits=["200 per day", "50 per hour"]
 )
 
