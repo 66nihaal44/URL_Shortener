@@ -47,13 +47,15 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
-    const textInput = urlForm.elements["originalUrl"];
+    const originalUrl = urlForm.elements["originalUrl"].value;
+    const customUrl = urlForm.elements["customUrl"].value;
     try {
         const res = await fetch(domain_url + "/shorten", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                url: textInput.value
+                url: originalUrl,
+                customUrl: customUrl
             })
         });
         urlDisplay.textContent = "Generating...";
