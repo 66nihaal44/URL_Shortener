@@ -49,7 +49,7 @@
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"].value;
-    const customUrl = urlForm.elements["customUrl"].value;
+    const customUrl = urlForm.elements["customUrl"].value ?? null;
     try {
         const res = await fetch(domain_url + "/shorten", {
             method: "POST",
