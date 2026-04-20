@@ -17,6 +17,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            gap: 10px;
         }
         .display{
             margin-top: 1rem;
@@ -33,13 +34,9 @@
         <h1>URL Shortener</h1>
         <form id="urlSubmit">
           <label> Type URL here</label>
-          <br>
           <input type="text" name="originalUrl" required />
-          <br>
           <label> Type Custom URL (Optional)</label>
-          <br>
           <input type="text" placeholder="custom-url" name="customUrl" />
-          <br>
           <button type="submit">Generate Shortened URL</button>
         </form>
         <div class="display" id="urlDisplay">Shortened URL shows here.</div>
