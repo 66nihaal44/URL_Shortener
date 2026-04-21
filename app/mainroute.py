@@ -25,11 +25,18 @@ def shorten():
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
     if exists:
-      redis_client.set(exists.short_code, exists.original_url, ex=3600)
-      return jsonify({
-             "short_url": f"{domain_url}/{exists.short_code}"
-             }), 200
-    short_code = gen_random_code(session)
+    redis_client.set(exists.short_code, exists.original_url, ex=3600)
+    return jsonify({
+           "short_url": f"{domain_url}/{exists.short_code}"
+           }), 200
+    if custom_url:
+      exists = session.query(URL).filter_by(short_code=custom_url).first()
+      if not exists:
+        short_code = custom_url
+      else:
+        return jsonify({"error": "URL already exists"}), 409
+    else:
+      short_code = gen_random_code(session)
     url = URL(original_url=original_url, short_code = short_code)
     session.add(url)
     session.flush()
