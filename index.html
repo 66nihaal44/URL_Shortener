@@ -61,6 +61,7 @@
     const customUrl = urlForm.elements["customUrl"].value ?? null;
     try {
         const res = await fetch(domain_url + "/shorten", {
+            // NEW FEATURE: MAKE ERROR MESSAGES VISIBLE ON FRONTEND
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
