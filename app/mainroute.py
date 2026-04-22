@@ -21,6 +21,7 @@ def shorten():
   if not is_valid_url(data["url"]):
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"]
+  custom_url = data["customUrl"]
   session = engine.SessionLocal()
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
@@ -41,7 +42,7 @@ def shorten():
     session.add(url)
     session.flush()
     session.commit()
-    redis_client.set(short_code, original_url, ex=3600) # redis_client here
+    redis_client.set(short_code, original_url, ex=3600)
   finally:
     session.close()
   return jsonify({
