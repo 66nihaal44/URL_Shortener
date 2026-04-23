@@ -57,6 +57,10 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
+    if(!urlForm.checkValidity()){
+        urlForm.reportValidity();
+        return;
+    }
     const originalUrl = urlForm.elements["originalUrl"].value;
     const customUrl = urlForm.elements["customUrl"].value ?? null;
     try {
