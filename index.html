@@ -57,12 +57,12 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
-    if(!urlForm.checkValidity()){
-        urlForm.reportValidity();
-        return;
-    }
     const originalUrl = urlForm.elements["originalUrl"].value;
     const customUrl = urlForm.elements["customUrl"].value ?? null;
+    if(customURL && !customUrl.checkValidity()){
+        customURL.reportValidity();
+        return;
+    }
     try {
         const res = await fetch(domain_url + "/shorten", {
             // NEW FEATURE: MAKE ERROR MESSAGES VISIBLE ON FRONTEND
