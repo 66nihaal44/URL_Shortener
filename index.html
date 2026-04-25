@@ -57,9 +57,9 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
-    const originalUrl = urlForm.elements["originalUrl"].value;
-    const customUrl = urlForm.elements["customUrl"].value ?? null;
-    if(customUrl !== null && !customUrl.checkValidity()){
+    const originalUrl = urlForm.elements["originalUrl"];
+    const customUrl = urlForm.elements["customUrl"] ?? null;
+    if(customUrl.value && !customUrl.checkValidity()){
         customUrl.reportValidity();
         return;
     }
@@ -69,8 +69,8 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                url: originalUrl,
-                customUrl: customUrl
+                url: originalUrl.value,
+                customUrl: customUrl.value
             })
         });
         urlDisplay.textContent = "Generating...";
