@@ -59,8 +59,8 @@
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"].value;
     const customUrl = urlForm.elements["customUrl"].value ?? null;
-    if(customURL !== null && !customUrl.checkValidity()){
-        customURL.reportValidity();
+    if(customUrl !== null && !customUrl.checkValidity()){
+        customUrl.reportValidity();
         return;
     }
     try {
