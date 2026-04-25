@@ -42,7 +42,7 @@
           <label> Type Custom URL (Optional)</label>
           <br/>
           <br/>
-          <input type="text" placeholder="custom-url" name="customUrl" pattern="^[A-Za-z0-9_-]+$" />
+          <input type="text" placeholder="custom-url" name="customUrl" pattern="[A-Za-z0-9_-]*" />
           <br/>
           <br/>
           <button type="submit">Generate Shortened URL</button>
@@ -57,10 +57,10 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
-    const originalUrl = urlForm.elements["originalUrl"];
-    const customUrl = urlForm.elements["customUrl"] ?? null;
-    if(customUrl.value && !customUrl.checkValidity()){
-        customUrl.reportValidity();
+    const originalUrl = urlForm.elements["originalUrl"].value;
+    const customUrl = urlForm.elements["customUrl"].value ?? null;
+    if(urlForm && !urlForm.checkValidity()){
+        urlForm.reportValidity();
         return;
     }
     try {
@@ -69,8 +69,8 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                url: originalUrl.value,
-                customUrl: customUrl.value
+                url: originalUrl,
+                customUrl: customUrl
             })
         });
         urlDisplay.textContent = "Generating...";
