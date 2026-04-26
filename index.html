@@ -59,7 +59,7 @@
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"].value;
     const customUrl = urlForm.elements["customUrl"].value ?? null;
-    if(urlForm && !urlForm.checkValidity()){
+    if(!urlForm.checkValidity()){
         urlForm.reportValidity();
         return;
     }
