@@ -9,6 +9,9 @@ from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 import random
 import string
+import re
+
+pattern = re.compile(r'[A-Za-z0-9_-')
 
 domain_url = "https://url-shortener-g54n.onrender.com"
 main = Blueprint("main", __name__)
@@ -33,6 +36,8 @@ def shorten():
     if custom_url:
       exists = session.query(URL).filter_by(short_code=custom_url).first()
       if not exists:
+        if custom_url and not pattern.match(custom_url):
+          return jsonify({"error": "Invalid custom URL"}), 400
         short_code = custom_url
       else:
         return jsonify({"error": "URL already exists"}), 409
