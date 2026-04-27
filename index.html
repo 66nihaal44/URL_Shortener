@@ -59,10 +59,10 @@
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"];
     const customUrl = urlForm.elements["customUrl"];
-    if(!customUrl.checkValidity()){
+    /*if(!customUrl.checkValidity()){
         customUrl.reportValidity();
         return;
-    }
+    }*/
     try {
         const res = await fetch(domain_url + "/shorten", {
             // NEW FEATURE: MAKE ERROR MESSAGES VISIBLE ON FRONTEND
