@@ -11,7 +11,7 @@ import random
 import string
 import re
 
-pattern = re.compile(r'[A-Za-z0-9_-]')
+pattern = re.compile(r'[A-Za-z0-9_-]+')
 
 domain_url = "https://url-shortener-g54n.onrender.com"
 main = Blueprint("main", __name__)
