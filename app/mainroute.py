@@ -36,7 +36,7 @@ def shorten():
     if custom_url:
       exists = session.query(URL).filter_by(short_code=custom_url).first()
       if not exists:
-        if custom_url and not pattern.match(custom_url):
+        if custom_url and not pattern.fullmatch(custom_url):
           return jsonify({"error": "Invalid custom URL"}), 400
         short_code = custom_url
       else:
