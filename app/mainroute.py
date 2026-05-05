@@ -56,7 +56,8 @@ def shorten():
 @main.route("/<short_code>")
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
-  cached_url = redis_client.get(short_code)
+  referrer = request.headers.get("Referer")
+  cached_url = redis_client.get(short_code, referrer=None)
   if cached_url:
     log_click(short_code)
     return redirect(cached_url)
@@ -69,7 +70,7 @@ def redirect_handler(short_code):
             "error": "URL not found"
             }), 404
     redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
-    log_click(short_code)
+    log_click(short_code, referrer=None)
   finally:
     session.close()
   return redirect(url.original_url)
