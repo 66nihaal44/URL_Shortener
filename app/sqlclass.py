@@ -17,3 +17,4 @@ class Click(Base):
   id = Column(Integer, primary_key=True)
   url_id = Column(Integer)
   timestamp = Column(DateTime(timezone=True), server_default=func.now())
+  referrer = Column(String, nullable=True)
