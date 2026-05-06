@@ -108,6 +108,17 @@ def clicks_last_day():
     session.close()
   return {"clicks_last_day": count}
 
+@main.route("/analytics/referrers")
+def clicks_referrers():
+  session = engine.SessionLocal()
+  try:
+    results = ( session.query(Click.referrer, func.count(Click.id))
+                .group_by(Click.referrer).all()
+              )
+  finally:
+    session.close()
+  return {"clicks_referrers": results}
+
 base62 = string.ascii_letters + string.digits
 def gen_random_code(session, length = 6):
   while True:
