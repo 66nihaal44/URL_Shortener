@@ -94,6 +94,7 @@
     }
     catch(err){
         console.error("Error during generation: ", err.message)
+        urlDisplay.textContent = `Error during generation: ${err.message}`
     }
   });
 </script>
