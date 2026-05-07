@@ -57,7 +57,7 @@ def shorten():
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
   referrer = request.headers.get("Referer")
-  cached_url = redis_client.get(short_code, referrer=None)
+  cached_url = redis_client.get(short_code)
   if cached_url:
     log_click(short_code)
     return redirect(cached_url)
