@@ -59,7 +59,7 @@ def redirect_handler(short_code):
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
   if cached_url:
-    log_click(short_code)
+    log_click(short_code, referrer)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
