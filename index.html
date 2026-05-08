@@ -40,7 +40,7 @@
           <br/>
           <br/>
           <button type="button" id="advanced">Advanced Options</button>
-          <label id="options"> Type Custom URL (Optional)</label>
+          <label style="display: none;" id="options"> Type Custom URL (Optional)</label>
           <br/>
           <br/>
           <input type="text" placeholder="custom-url" name="customUrl" pattern="[A-Za-z0-9_-]*" />
@@ -58,7 +58,14 @@
   const domain_url = "https://url-shortener-g54n.onrender.com";
   const advanced = document.getElementById("advanced");
   const options = document.getElementById("options");
-  //advanced.addEventListener("click", func(a)  {});
+  advanced.addEventListener("click", func {
+      if(options.style.display === "none"){
+          options.style.display = "block";
+      }
+      else {
+          options.style.display = "none";
+      }
+  });
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"];
