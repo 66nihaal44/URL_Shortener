@@ -14,7 +14,7 @@ def log_click_func(short_code, referrer=None):
   finally:
     session.close()
 
-def log_click(short_code, referrer):
+def log_click(short_code, referrer=None):
   thread = Thread(target = log_click_func, args=(short_code, referrer))
   thread.daemon = True
   thread.start()
