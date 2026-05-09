@@ -25,6 +25,7 @@ def shorten():
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"]
   custom_url = data["customUrl"]
+  expiry_date = data["expiryDate"]
   session = engine.SessionLocal()
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
@@ -44,6 +45,8 @@ def shorten():
     else:
       short_code = gen_random_code(session)
     url = URL(original_url=original_url, short_code = short_code)
+    if expiry_date:
+      url.expires_at = expiry_date
     session.add(url)
     session.flush()
     session.commit()
