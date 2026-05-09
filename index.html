@@ -95,7 +95,7 @@
                 url: originalUrl.value,
                 customUrl: customUrl.value ?? null,
                 // Plan: account for Timezones 
-                expiryDate: Date.parse(expiryDate.value)
+                expiryDate: Date.parse(expiryDate.value) ?? null
             })
         });
         urlDisplay.textContent = "Generating...";
