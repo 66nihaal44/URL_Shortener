@@ -93,7 +93,9 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 url: originalUrl.value,
-                customUrl: customUrl.value ?? null
+                customUrl: customUrl.value ?? null,
+                // Plan: account for Timezones 
+                expiryDate: Date.parse(expiryDate.value)
             })
         });
         urlDisplay.textContent = "Generating...";
