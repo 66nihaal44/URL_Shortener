@@ -46,6 +46,11 @@
           <br/>
           <br/>
           <input type="text" placeholder="custom-url" name="customUrl" pattern="[A-Za-z0-9_-]*" />
+          <br/>
+          <label> Type Link Expiration Date</label>
+          <br/>
+          <br/>
+          <input type="date" name="expiryDate" id="expiryDate" />
           </div>
           <br/>
           <br/>
@@ -58,9 +63,11 @@
 <script>
   const urlForm = document.getElementById("urlSubmit");
   const urlDisplay = document.getElementById("urlDisplay");
-  const domain_url = "https://url-shortener-g54n.onrender.com";
   const advanced = document.getElementById("advanced");
   const options = document.getElementById("options");
+  const expiryDate = document.getElementById("expiryDate");
+  const domainUrl = "https://url-shortener-g54n.onrender.com";
+  expiryDate.min = new Date().toLocaleDateString('fr-ca');
   advanced.addEventListener("click", function () {
       if(options.style.display === "none"){
           options.style.display = "block";
@@ -79,7 +86,7 @@
         return;
     }*/
     try {
-        const res = await fetch(domain_url + "/shorten", {
+        const res = await fetch(domainUrl + "/shorten", {
             // NEW FEATURE: MAKE ERROR MESSAGES VISIBLE ON FRONTEND
             method: "POST",
             headers: { "Content-Type": "application/json" },
