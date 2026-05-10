@@ -25,7 +25,7 @@ def shorten():
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"]
   custom_url = data["customUrl"]
-  expiry_date = data["expiryDate"].datetime.strftime('%Y-%m-%d %H:%M:%S')
+  expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d').timestamp()
   print("expiry_date: ", expiry_date, flush=True)
   session = engine.SessionLocal()
   try:
@@ -70,9 +70,9 @@ def redirect_handler(short_code):
     url = session.query(URL).filter_by(short_code=short_code).first()
     print("DB result:", url)
     if not url:
-     return jsonify({
-            "error": "URL not found"
-            }), 404
+     return jsonify({"error": "URL not found"}), 404
+    if url.expires_at and url.expires_at < datetime.utcnow():
+      return jsonify({"error": "Link expired"}), 410
     redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
     log_click(short_code, referrer=None)
   finally:
