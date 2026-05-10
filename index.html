@@ -81,7 +81,6 @@
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"];
     const customUrl = urlForm.elements["customUrl"];
-    console.log(Date.parse(expiryDate.value));
     /*console.log(customUrl.validity);
     if(!customUrl.checkValidity()){
         customUrl.reportValidity();
@@ -96,7 +95,7 @@
                 url: originalUrl.value,
                 customUrl: customUrl.value ?? null,
                 // Plan: account for Timezones 
-                expiryDate: Date.parse(expiryDate.value) ?? null
+                expiryDate: expiryDate.value ?? null
             })
         });
         urlDisplay.textContent = "Generating...";
