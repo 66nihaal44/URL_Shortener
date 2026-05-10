@@ -25,7 +25,7 @@ def shorten():
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"]
   custom_url = data["customUrl"]
-  expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d').timestamp()
+  expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d')
   print("expiry_date: ", expiry_date, flush=True)
   session = engine.SessionLocal()
   try:
