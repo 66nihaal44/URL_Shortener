@@ -11,6 +11,7 @@ class URL(Base):
   created_at = Column(DateTime(timezone=True), server_default=func.now())
   click_count = Column(Integer, default=0, nullable=False)
   expires_at = Column(DateTime(timezone=True), nullable=True)
+  hashed_password = Column(String, nullable=True)
 
 class Click(Base):
   __tablename__ = "clicks"
