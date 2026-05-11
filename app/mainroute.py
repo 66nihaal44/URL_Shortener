@@ -24,8 +24,9 @@ def shorten():
   if not is_valid_url(data["url"]):
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"]
-  custom_url = data["customUrl"]
-  expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d')
+  custom_url = data["customUrl"] if data["customUrl"] else None
+  expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
+  hashed_password = generate_password_hash(data["password"]) if data["password"] else None
   print("expiry_date: ", expiry_date, flush=True)
   session = engine.SessionLocal()
   try:
