@@ -65,6 +65,7 @@ def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
     log_click(short_code, referrer)
+    password_entry(cached_url)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -78,7 +79,14 @@ def redirect_handler(short_code):
     log_click(short_code, referrer=None)
   finally:
     session.close()
+  password_entry(url)
   return redirect(url.original_url)
+  def password_entry(url):
+    if url.hashed_password:
+      sub_password = request.form.get("password")
+      if not sub_password or not check_password_hash(url.hashed_password, sub_password):
+        return render_template("password_prompt.html"), 401
+    return
 
 @main.route("/stats/<short_code>")
 @limiter.limit("30 per minute, 300 per hour")
