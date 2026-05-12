@@ -53,7 +53,7 @@ def shorten():
     session.add(url)
     session.flush()
     session.commit()
-    redis_client.set(short_code, original_url, hashed_password, ex=3600) # redis_client here
+    redis_client.set(short_code, original_url, ex=3600) # redis_client here
   finally:
     session.close()
   return jsonify({
@@ -64,10 +64,10 @@ def shorten():
 def redirect_handler(short_code):
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
-  cached_password = redis_client.get(hashed_password)
+  #cached_password = redis_client.get(hashed_password)
   if cached_url:
     log_click(short_code, referrer)
-    password_entry(cached_password)
+    #password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -77,11 +77,11 @@ def redirect_handler(short_code):
      return jsonify({"error": "URL not found"}), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
       return jsonify({"error": "Link expired"}), 410
-    redis_client.set(short_code, original_url, hashed_password, ex=3600) # 1 hour
+    redis_client.set(short_code, original_url, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
   finally:
     session.close()
-  password_entry(url.hashed_password)
+  #password_entry(url.hashed_password)
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
