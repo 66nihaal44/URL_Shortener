@@ -66,7 +66,7 @@ def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   if cached_url:
     log_click(short_code, referrer)
-    password_entry(cached_url)
+    #password_entry(cached_url) add password validation
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
