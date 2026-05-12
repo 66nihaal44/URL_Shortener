@@ -55,6 +55,13 @@
           </div>
           <br/>
           <br/>
+          <label> Type Password</label>
+          <br/>
+          <br/>
+          <input type="text" name="password"/>
+          </div>
+          <br/>
+          <br/>
           <button type="submit">Generate Shortened URL</button>
         </form>
         <br/>
@@ -66,7 +73,7 @@
   const urlDisplay = document.getElementById("urlDisplay");
   const advanced = document.getElementById("advanced");
   const options = document.getElementById("options");
-  const expiryDate = document.getElementById("expiryDate");
+  const expiryDate = urlForm.elements["expiryDate"];
   const domainUrl = "https://url-shortener-g54n.onrender.com";
   expiryDate.min = new Date().toLocaleDateString('fr-ca');
   advanced.addEventListener("click", function () {
@@ -81,7 +88,7 @@
     a.preventDefault();
     const originalUrl = urlForm.elements["originalUrl"];
     const customUrl = urlForm.elements["customUrl"];
-    console.log(expiryDate.value);
+    const password = urlForm.elements["password"];
     /*console.log(customUrl.validity);
     if(!customUrl.checkValidity()){
         customUrl.reportValidity();
@@ -97,7 +104,7 @@
                 customUrl: customUrl.value ?? null,
                 // Plan: account for Timezones 
                 expiryDate: expiryDate.value ?? null,
-                password: null
+                password: password.value ?? null,
             })
         });
         urlDisplay.textContent = "Generating...";
