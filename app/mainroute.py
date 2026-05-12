@@ -47,7 +47,7 @@ def shorten():
     else:
       short_code = gen_random_code(session)
     url = URL(original_url=original_url, short_code = short_code)
-    url.expires_at = expires_date if expires_date else None
+    url.expires_at = expire_date if expire_date else None
     url.hashed_password = hashed_password if hashed_password else None
     session.add(url)
     session.flush()
