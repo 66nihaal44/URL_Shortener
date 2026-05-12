@@ -8,7 +8,7 @@ import re
 from . import engine
 from .limit import limiter
 from .sqlclass import URL, Click
-from .utility import is_valid_url
+from .utility import is_valid_url, password_entry
 from .cache import redis_client
 from .asynctasks import log_click
 
@@ -82,14 +82,6 @@ def redirect_handler(short_code):
     session.close()
   password_entry(url)
   return redirect(url.original_url)
-
-# Helper for redirect_handler
-def password_entry(url): 
-  if url.hashed_password:
-    sub_password = request.form.get("password")
-    if not sub_password or not check_password_hash(url.hashed_password, sub_password):
-      return render_template("password_prompt.html"), 401
-  return
 
 @main.route("/stats/<short_code>")
 @limiter.limit("30 per minute, 300 per hour")
