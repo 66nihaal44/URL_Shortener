@@ -53,7 +53,7 @@ def shorten():
     session.add(url)
     session.flush()
     session.commit()
-    redis_client.set(short_code, original_url, ex=3600)
+    redis_client.set(short_code, original_url, hashed_password, ex=3600) # redis_client here
   finally:
     session.close()
   return jsonify({
@@ -77,7 +77,7 @@ def redirect_handler(short_code):
      return jsonify({"error": "URL not found"}), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
       return jsonify({"error": "Link expired"}), 410
-    redis_client.set(short_code, url.original_url, ex = 3600) # 1 hour
+    redis_client.set(short_code, original_url, hashed_password, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
   finally:
     session.close()
