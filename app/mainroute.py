@@ -66,12 +66,10 @@ def shorten():
 def redirect_handler(short_code):
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
-  if redis_client.exists(short_code + ".password"):
-    cached_password = redis_client.get(short_code + ".password")
+  cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
     log_click(short_code, referrer)
-    if cached_password:
-      password_entry(cached_password)
+    password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -87,8 +85,7 @@ def redirect_handler(short_code):
     log_click(short_code, referrer=None)
   finally:
     session.close()
-  if url.hashed_password:
-    password_entry(url.hashed_password)
+  password_entry(url.hashed_password)
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
