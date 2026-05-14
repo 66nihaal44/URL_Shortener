@@ -54,7 +54,8 @@ def shorten():
     session.flush()
     session.commit()
     redis_client.set(short_code, original_url, ex=3600) # redis_client here
-    redis_client.set(short_code + ".password", hashed_password, ex=3600)
+    if hashed_password:
+      redis_client.set(short_code + ".password", hashed_password, ex=3600)
   finally:
     session.close()
   return jsonify({
@@ -65,7 +66,8 @@ def shorten():
 def redirect_handler(short_code):
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
-  cached_password = redis_client.get(short_code + ".password")
+  if redis_client.exists(short_code + ".password"):
+    cached_password = redis_client.get(short_code + ".password")
   if cached_url:
     log_click(short_code, referrer)
     password_entry(cached_password)
@@ -79,7 +81,8 @@ def redirect_handler(short_code):
     if url.expires_at and url.expires_at < datetime.utcnow():
       return jsonify({"error": "Link expired"}), 410
     redis_client.set(short_code, original_url, ex=3600) # 1 hour
-    redis_client.set(short_code + ".password", hashed_password, ex=3600)
+    if url.hashed_password:
+      redis_client.set(short_code + ".password", hashed_password, ex=3600)
     log_click(short_code, referrer=None)
   finally:
     session.close()
