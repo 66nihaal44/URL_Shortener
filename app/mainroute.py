@@ -68,7 +68,7 @@ def redirect_handler(short_code):
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
     log_click(short_code, referrer)
-    if password:
+    if cached_password:
       return render_template("password_prompt.html"), 401
     #password_entry(cached_password)
     return redirect(cached_url)
@@ -87,7 +87,7 @@ def redirect_handler(short_code):
   finally:
     session.close()
   #password_entry(url.hashed_password)
-  if password:
+  if url.hashed_password:
     return render_template("password_prompt.html"), 401
   return redirect(url.original_url)
 
