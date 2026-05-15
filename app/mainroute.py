@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, jsonify
+from flask import Blueprint, request, redirect, jsonify, render_template
 from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -68,7 +68,9 @@ def redirect_handler(short_code):
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
     log_click(short_code, referrer)
-    return password_entry(cached_password)
+    if password:
+      return render_template("password_prompt.html"), 401
+    //password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -84,7 +86,9 @@ def redirect_handler(short_code):
     log_click(short_code, referrer=None)
   finally:
     session.close()
-  return password_entry(url.hashed_password)
+  #password_entry(url.hashed_password)
+  if password:
+    return render_template("password_prompt.html"), 401
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
