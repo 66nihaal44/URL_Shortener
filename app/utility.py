@@ -9,8 +9,6 @@ def is_valid_url(url):
 
 # Helper for redirect_handler
 def password_entry(password):
-  if password:
     #sub_password = request.form.get("password")
     #if not sub_password or not check_password_hash(password, sub_password):
-    return render_template("password_prompt.html"), 401
-  return
+  return;
