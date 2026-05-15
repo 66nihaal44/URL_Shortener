@@ -70,7 +70,7 @@ def redirect_handler(short_code):
     log_click(short_code, referrer)
     if password:
       return render_template("password_prompt.html"), 401
-    //password_entry(cached_password)
+    #password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
