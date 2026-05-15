@@ -28,7 +28,6 @@ def shorten():
   custom_url = data["customUrl"] if data["customUrl"] else None
   expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
   hashed_password = generate_password_hash(data["password"]) if data["password"] else None
-  print("expiry_date: ", expiry_date, flush=True)
   session = engine.SessionLocal()
   try:
     exists = session.query(URL).filter_by(original_url=original_url).first()
