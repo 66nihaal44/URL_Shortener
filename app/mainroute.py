@@ -68,7 +68,7 @@ def redirect_handler(short_code):
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
     log_click(short_code, referrer)
-    password_entry(cached_password)
+    return password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -84,7 +84,7 @@ def redirect_handler(short_code):
     log_click(short_code, referrer=None)
   finally:
     session.close()
-  password_entry(url.hashed_password)
+  return password_entry(url.hashed_password)
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
