@@ -69,7 +69,7 @@ def redirect_handler(short_code):
   if cached_url:
     log_click(short_code, referrer)
     if cached_password:
-      return render_template("password_prompt.html"), 401
+      return render_template("password_prompt.html")
     #password_entry(cached_password)
     return redirect(cached_url)
   session = engine.SessionLocal()
@@ -88,7 +88,7 @@ def redirect_handler(short_code):
     session.close()
   #password_entry(url.hashed_password)
   if url.hashed_password:
-    return render_template("password_prompt.html"), 401
+    return render_template("password_prompt.html")
   return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
