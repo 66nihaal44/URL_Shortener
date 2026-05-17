@@ -63,6 +63,11 @@ def shorten():
 @main.route("/<short_code>")
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
+  if request.json:
+    data = request.json
+    if not data or "password" not in data:
+      return jsonify({"error": "Missing URL"}), 400
+    password_entry(data["password")
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
