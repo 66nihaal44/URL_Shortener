@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from werkzeug.security import check_password_hash
 
 def is_valid_url(url):
   parsed = urlparse(url)
