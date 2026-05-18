@@ -67,13 +67,14 @@ def redirect_handler(short_code):
     data = request.json
     if not data or "password" not in data:
       return jsonify({"error": "Missing URL"}), 400
-    password_entry(data["password")
+    if not password_entry(data["password"]):
+      return render_template("password_prompt.html", shortCode = short_code)
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
     log_click(short_code, referrer)
-    if cached_password:
+    if cached_password and not data:
       return render_template("password_prompt.html", shortCode = short_code)
     #password_entry(cached_password)
     return redirect(cached_url)
@@ -92,7 +93,7 @@ def redirect_handler(short_code):
   finally:
     session.close()
   #password_entry(url.hashed_password)
-  if url.hashed_password:
+  if url.hashed_password and not data:
     return render_template("password_prompt.html", shortCode = short_code)
   return redirect(url.original_url)
 
