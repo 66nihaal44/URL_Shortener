@@ -79,19 +79,19 @@ def redirect_handler(short_code):
     if not url:
      return jsonify({"error": "URL not found"}), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
-        return jsonify({"error": "Link expired"}), 410
-    if request.method == "GET":
-      
+      return jsonify({"error": "Link expired"}), 410
+    if request.method == "GET" and url.hashed_password:
+      return render_template("password_prompt.html", shortCode = short_code)
     if request.method == "POST":
       data = request.json
       if not data or "password" not in data:
         return jsonify({"error": "Missing URL"}), 400
       if not password_check(data["password"]):
         return render_template("password_prompt.html", shortCode = short_code)
-      redis_client.set(short_code, original_url, ex=3600) # 1 hour
-      if url.hashed_password:
-        redis_client.set(short_code + ".password", hashed_password, ex=3600)
-      log_click(short_code, referrer=None)
+        # add code for displaying that you typed incorrect password
+      redis_client.set(short_code + ".password", hashed_password, ex=3600)
+    redis_client.set(short_code, original_url, ex=3600) # 1 hour
+    log_click(short_code, referrer=None)
   finally:
     session.close()
   #password_entry(url.hashed_password)
