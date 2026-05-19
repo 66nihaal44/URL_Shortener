@@ -8,7 +8,7 @@ import re
 from . import engine
 from .limit import limiter
 from .sqlclass import URL, Click
-from .utility import is_valid_url, password_entry
+from .utility import is_valid_url, password_check
 from .cache import redis_client
 from .asynctasks import log_click
 
@@ -67,7 +67,7 @@ def redirect_handler(short_code):
     data = request.json
     if not data or "password" not in data:
       return jsonify({"error": "Missing URL"}), 400
-    if not password_entry(data["password"]):
+    if not password_check(data["password"]):
       return render_template("password_prompt.html", shortCode = short_code)
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
