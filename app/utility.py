@@ -8,7 +8,6 @@ def is_valid_url(url):
          "." in parsed.netloc)
 
 # Helper for redirect_handler
-def password_entry(password):
-    #sub_password = request.form.get("password")
-    #if not sub_password or not check_password_hash(password, sub_password):
-  return;
+def password_check(password, sub_password):
+  if not sub_password:
+    return check_password_hash(password, sub_password)
