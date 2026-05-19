@@ -63,12 +63,6 @@ def shorten():
 @main.route("/<short_code>", methods=["GET", "POST"])
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
-  if request.method == "POST":
-    data = request.json
-    if not data or "password" not in data:
-      return jsonify({"error": "Missing URL"}), 400
-    if not password_check(data["password"]):
-      return render_template("password_prompt.html", shortCode = short_code)
   referrer = request.headers.get("Referer")
   cached_url = redis_client.get(short_code)
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
@@ -85,11 +79,19 @@ def redirect_handler(short_code):
     if not url:
      return jsonify({"error": "URL not found"}), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
-      return jsonify({"error": "Link expired"}), 410
-    redis_client.set(short_code, original_url, ex=3600) # 1 hour
-    if url.hashed_password:
-      redis_client.set(short_code + ".password", hashed_password, ex=3600)
-    log_click(short_code, referrer=None)
+        return jsonify({"error": "Link expired"}), 410
+    if request.method == "GET":
+      
+    if request.method == "POST":
+      data = request.json
+      if not data or "password" not in data:
+        return jsonify({"error": "Missing URL"}), 400
+      if not password_check(data["password"]):
+        return render_template("password_prompt.html", shortCode = short_code)
+      redis_client.set(short_code, original_url, ex=3600) # 1 hour
+      if url.hashed_password:
+        redis_client.set(short_code + ".password", hashed_password, ex=3600)
+      log_click(short_code, referrer=None)
   finally:
     session.close()
   #password_entry(url.hashed_password)
