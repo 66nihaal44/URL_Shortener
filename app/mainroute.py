@@ -67,7 +67,6 @@ def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
-    log_click(short_code, referrer)
     if request.method == "GET" and cached_password:
       return render_template("password_prompt.html", shortCode = short_code)
     if request.method == "POST":
@@ -79,8 +78,9 @@ def redirect_handler(short_code):
         print("Wrong password", flush=True)
         print(cached_password, data["password"], flush=True)
         return render_template("password_prompt.html", shortCode = short_code)
-      print("Correct password", flush=True)
         # add code for displaying that you typed incorrect password
+      print("Correct password", flush=True)
+    log_click(short_code, referrer)
     print("Make redirect", flush=True)
     return redirect(cached_url)
   session = engine.SessionLocal()
