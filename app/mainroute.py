@@ -70,7 +70,13 @@ def redirect_handler(short_code):
     log_click(short_code, referrer)
     if request.method == "GET" and cached_password:
       return render_template("password_prompt.html", shortCode = short_code)
-    #password_entry(cached_password)
+    if request.method == "POST":
+      data = request.json
+      if not data or "password" not in data:
+        return jsonify({"error": "Missing URL"}), 400
+      if not password_check(cached_password, data["password"]):
+        return render_template("password_prompt.html", shortCode = short_code)
+        # add code for displaying that you typed incorrect password
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
@@ -86,15 +92,14 @@ def redirect_handler(short_code):
       data = request.json
       if not data or "password" not in data:
         return jsonify({"error": "Missing URL"}), 400
-      if not password_check(data["password"]):
+      if not password_check(url.hashed_password, data["password"]):
         return render_template("password_prompt.html", shortCode = short_code)
         # add code for displaying that you typed incorrect password
-      redis_client.set(short_code + ".password", hashed_password, ex=3600)
+      redis_client.set(short_code + ".password", url.hashed_password, ex=3600)
     redis_client.set(short_code, original_url, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
   finally:
     session.close()
-  #password_entry(url.hashed_password)
   if url.hashed_password and not data:
     return render_template("password_prompt.html", shortCode = short_code)
   return redirect(url.original_url)
