@@ -77,6 +77,7 @@ def redirect_handler(short_code):
         return jsonify({"error": "Missing URL"}), 400
       if not password_check(cached_password, data["password"]):
         print("Wrong password", flush=True)
+        print(cached_password, data["password"], flush=True)
         return render_template("password_prompt.html", shortCode = short_code)
       print("Correct password", flush=True)
         # add code for displaying that you typed incorrect password
