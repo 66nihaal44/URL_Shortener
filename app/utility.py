@@ -9,5 +9,5 @@ def is_valid_url(url):
 
 # Helper for redirect_handler
 def password_check(password, sub_password):
-  if not sub_password:
+  if sub_password:
     return check_password_hash(password, sub_password)
