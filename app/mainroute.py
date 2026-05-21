@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import random
 import string
 import re
+import time
 from . import engine
 from .limit import limiter
 from .sqlclass import URL, Click
@@ -67,6 +68,7 @@ def redirect_handler(short_code):
   cached_url = redis_client.get(short_code)
   cached_password = redis_client.get(short_code + ".password") if redis_client.exists(short_code + ".password") else None
   if cached_url:
+    time.sleep(3)
     if request.method == "GET" and cached_password:
       return render_template("password_prompt.html", shortCode = short_code)
     if request.method == "POST":
@@ -82,6 +84,7 @@ def redirect_handler(short_code):
       print("Correct password", flush=True)
     log_click(short_code, referrer)
     print("Make redirect", flush=True)
+    time.sleep(3)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
