@@ -80,9 +80,10 @@ def redirect_handler(short_code):
         return render_template("password_prompt.html", shortCode = short_code)
         # add code for displaying that you typed incorrect password
       print("Correct password", flush=True)
+      return jsonify({"redirect": cached_url}), 200
     log_click(short_code, referrer)
     print("Make redirect", flush=True)
-    return redirect(cached_url, code=307)
+    return redirect(cached_url)
   session = engine.SessionLocal()
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
@@ -101,13 +102,14 @@ def redirect_handler(short_code):
         return render_template("password_prompt.html", shortCode = short_code)
         # add code for displaying that you typed incorrect password
       redis_client.set(short_code + ".password", url.hashed_password, ex=3600)
+      return jsonify({"redirect": cached_url}), 200
     redis_client.set(short_code, original_url, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
   finally:
     session.close()
   if url.hashed_password and not data:
     return render_template("password_prompt.html", shortCode = short_code)
-  return redirect(url.original_url, code=307)
+  return redirect(url.original_url)
 
 @main.route("/stats/<short_code>")
 @limiter.limit("30 per minute, 300 per hour")
