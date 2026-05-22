@@ -70,24 +70,19 @@ def redirect_handler(short_code):
     if request.method == "GET" and cached_password:
       return render_template("password_prompt.html", shortCode = short_code)
     if request.method == "POST":
-      print("Post Request Reached", flush=True)
       data = request.json
       if not data or "password" not in data:
         return jsonify({"error": "Missing URL"}), 400
       if not password_check(cached_password, data["password"]):
-        print("Wrong password", flush=True)
-        print(cached_password, data["password"], flush=True)
-        return render_template("password_prompt.html", shortCode = short_code)
+        return jsonify({"error": "Incorrect Password"}), 401
         # add code for displaying that you typed incorrect password
-      print("Correct password", flush=True)
+      log_click(short_code, referrer)
       return jsonify({"redirect": cached_url}), 200
     log_click(short_code, referrer)
-    print("Make redirect", flush=True)
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
-    print("DB result:", url)
     if not url:
      return jsonify({"error": "URL not found"}), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
@@ -99,9 +94,11 @@ def redirect_handler(short_code):
       if not data or "password" not in data:
         return jsonify({"error": "Missing URL"}), 400
       if not password_check(url.hashed_password, data["password"]):
-        return render_template("password_prompt.html", shortCode = short_code)
+        return jsonify({"error": "Incorrect Password"}), 401
         # add code for displaying that you typed incorrect password
+      redis_client.set(short_code, original_url, ex=3600) # 1 hour
       redis_client.set(short_code + ".password", url.hashed_password, ex=3600)
+      log_click(short_code, referrer=None)
       return jsonify({"redirect": cached_url}), 200
     redis_client.set(short_code, original_url, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
