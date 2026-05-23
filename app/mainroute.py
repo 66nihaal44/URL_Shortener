@@ -16,6 +16,11 @@ pattern = re.compile(r'[A-Za-z0-9_-]+')
 
 domain_url = "https://url-shortener-g54n.onrender.com"
 main = Blueprint("main", __name__)
+
+@main.errorhandler(404)
+def page_not_found():
+  return render__template("404page.html")
+
 @main.route("/shorten", methods=["POST"])
 @limiter.limit("10 per minute, 100 per hour")
 def shorten():
@@ -152,10 +157,6 @@ def clicks_referrers():
   finally:
     session.close()
   return {"clicks_referrers": results}
-
-@main.errorhandler(404)
-def page_not_found():
-  return render__template("404page.html")
 
 base62 = string.ascii_letters + string.digits
 def gen_random_code(session, length = 6):
