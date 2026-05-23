@@ -61,6 +61,7 @@ def shorten():
   return jsonify({
          "short_url": f"{domain_url}/{short_code}"
          }), 201
+
 @main.route("/<short_code>", methods=["GET", "POST"])
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
