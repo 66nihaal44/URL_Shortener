@@ -156,7 +156,7 @@ def clicks_referrers():
 
 @main.errorhandler(404)
 def page_not_found():
-  return render__template("404page.html")
+  return render_template("404page.html")
 
 base62 = string.ascii_letters + string.digits
 def gen_random_code(session, length = 6):
