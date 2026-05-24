@@ -51,36 +51,18 @@
         <h1>URL Shortener</h1>
         <form id="urlSubmit">
           <label> Type URL here</label>
-          <br/>
-          <br/>
           <input type="url" name="originalUrl" value="https://" maxlength="64" required />
-          <br/>
-          <br/>
           <button type="button" id="advanced">Advanced Options</button>
           <div style="display:none;" id="options">
-          <br/>
-          <label> Type Custom URL</label>
-          <br/>
-          <br/>
-          <input type="text" placeholder="custom-url" name="customUrl" pattern="[A-Za-z0-9_-]*" />
-          <br/>
-          <br/>
-          <label> Type Link Expiration Date</label>
-          <br/>
-          <br/>
-          <input type="date" name="expiryDate" />
-          <br/>
-          <br/>
-          <label> Type Password</label>
-          <br/>
-          <br/>
-          <input type="text" name="password"/>
+              <label> Type Custom URL</label>
+              <input type="text" placeholder="custom-url" name="customUrl" pattern="[A-Za-z0-9_-]*" />
+              <label> Type Link Expiration Date</label>
+              <input type="date" name="expiryDate" />
+              <label> Type Password</label>
+              <input type="text" name="password"/>
           </div>
-          <br/>
-          <br/>
           <button type="submit">Generate Shortened URL</button>
         </form>
-        <br/>
         <div class="display" id="urlDisplay">Shortened URL shows here.</div>
     </div>
 </body>
