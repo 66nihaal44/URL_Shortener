@@ -86,7 +86,7 @@ def redirect_handler(short_code):
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
     if not url:
-     abort(404)
+     return render_template("404page.html"), 404
     if url.expires_at and url.expires_at < datetime.utcnow():
       return jsonify({"error": "Link expired"}), 410
     if request.method == "GET" and url.hashed_password:
@@ -117,7 +117,7 @@ def stats(short_code):
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
     if not url:
-      abort(404)
+      return render_template("404page.html"), 404
     return jsonify({
       "original_url": url.original_url,
       "short_code": short_code,
