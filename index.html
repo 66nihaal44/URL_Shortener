@@ -46,6 +46,7 @@
   });
   urlForm.addEventListener("submit", async (a) => {
     a.preventDefault();
+    urlDisplay.textContent = "Loading..."
     const originalUrl = urlForm.elements["originalUrl"];
     const customUrl = urlForm.elements["customUrl"];
     const password = urlForm.elements["password"];
