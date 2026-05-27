@@ -2,7 +2,8 @@ from flask import Blueprint, request, redirect, jsonify, render_template
 from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.urls import url_fix
+from werkzeug.utils import url_fix
+from urllib.parse import urlparse
 import random
 import string
 import re
@@ -29,6 +30,7 @@ def shorten():
   original_url = data["url"].lower()
   original_url = original_url.strip("/")
   original_url = url_fix(original_url)
+  original_url, fragment = urlparse.urldefrag(original_url)
   custom_url = data["customUrl"] if data["customUrl"] else None
   expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
   hashed_password = generate_password_hash(data["password"]) if data["password"] else None
