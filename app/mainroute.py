@@ -2,7 +2,7 @@ from flask import Blueprint, request, redirect, jsonify, render_template
 from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import url_fix
+from werkzeug.urls import url_fix
 from urllib.parse import urlparse
 import random
 import string
