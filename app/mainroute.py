@@ -27,6 +27,7 @@ def shorten():
   if not is_valid_url(data["url"]):
     return jsonify({"error": "Invalid URL"}), 400
   original_url = data["url"].lower()
+  original_url = original_url.strip("/")
   original_url = url_fix(original_url)
   custom_url = data["customUrl"] if data["customUrl"] else None
   expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
