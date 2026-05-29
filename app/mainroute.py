@@ -3,7 +3,7 @@ from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 #from werkzeug.urls import url_fix
-from urllib.parse import urldefrag
+from urllib.parse import urlparse, urlunparse, urldefrag
 import random
 import string
 import re
@@ -27,10 +27,16 @@ def shorten():
     return jsonify({"error": "Missing URL"}), 400
   if not is_valid_url(data["url"]):
     return jsonify({"error": "Invalid URL"}), 400
-  original_url = data["url"].lower()
-  original_url = original_url.strip("/")
-  #original_url = url_fix(original_url)
-  original_url, fragment = urldefrag(original_url)
+  original_url = data["url"].strip("/")
+  original_url = original_url.split("#")[0]
+  original_url = urlparse(original_url)
+  original_url = urlunparse((
+    original_url.scheme.lower(),
+    original_url.netloc.lower(),
+    original_url.path,
+    original_url.params,
+    original_url.query
+  ))
   custom_url = data["customUrl"] if data["customUrl"] else None
   expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
   hashed_password = generate_password_hash(data["password"]) if data["password"] else None
