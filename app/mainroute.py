@@ -35,7 +35,8 @@ def shorten():
     original_url.netloc.lower(),
     original_url.path,
     original_url.params,
-    original_url.query
+    original_url.query,
+    ""
   ))
   custom_url = data["customUrl"] if data["customUrl"] else None
   expiry_date = datetime.strptime(data["expiryDate"], '%Y-%m-%d') if data["expiryDate"] else None
