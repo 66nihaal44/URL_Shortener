@@ -3,7 +3,7 @@ from sqlalchemy import func
 from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 #from werkzeug.urls import url_fix
-from urllib.parse import urlparse, urlunparse, urldefrag
+from urllib.parse import urlparse, urlunparse
 import random
 import string
 import re
