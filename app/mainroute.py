@@ -74,6 +74,49 @@ def shorten():
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 
+@main.route("/api/<short_code>/stats")
+@limiter.limit("30 per minute, 300 per hour")
+def stats(short_code):
+  session = engine.SessionLocal()
+  try:
+    url = session.query(URL).filter_by(short_code=short_code).first()
+    if not url:
+      return jsonify({"error": "URL not found"}), 404
+    return jsonify({
+      "original_url": url.original_url,
+      "short_code": short_code,
+      "created_at": url.created_at,
+      "age_seconds": (datetime.now(timezone.utc) - url.created_at).total_seconds(),
+      "click_count": url.click_count,
+      "expires_at": url.expires_at if url.expires_at else None
+    })
+  finally:
+    session.close()
+
+@main.route("/analytics/last-day")
+def clicks_last_day():
+  session = engine.SessionLocal()
+  try:
+    since = datetime.now(timezone.utc) - timedelta(days=1)
+    count = session.query(func.count()).filter(
+      Click.timestamp > since
+    ).scalar()
+  finally:
+    session.close()
+  return {"clicks_last_day": count}
+
+@main.route("/api/analytics/referrers")
+def clicks_referrers():
+  session = engine.SessionLocal()
+  try:
+    results = ( session.query(Click.referrer, func.count(Click.id))
+                .group_by(Click.referrer).all()
+              )
+    results = [tuple(row) for row in results]
+  finally:
+    session.close()
+  return {"clicks_referrers": results}
+
 @main.route("/<short_code>", methods=["GET", "POST"])
 @limiter.limit("200 per minute, 2000 per hour")
 def redirect_handler(short_code):
@@ -121,49 +164,6 @@ def redirect_handler(short_code):
   if url.hashed_password and not data:
     return render_template("password_prompt.html", shortCode = short_code)
   return redirect(url.original_url)
-
-@main.route("/api/<short_code>/stats")
-@limiter.limit("30 per minute, 300 per hour")
-def stats(short_code):
-  session = engine.SessionLocal()
-  try:
-    url = session.query(URL).filter_by(short_code=short_code).first()
-    if not url:
-      return jsonify({"error": "URL not found"}), 404
-    return jsonify({
-      "original_url": url.original_url,
-      "short_code": short_code,
-      "created_at": url.created_at,
-      "age_seconds": (datetime.now(timezone.utc) - url.created_at).total_seconds(),
-      "click_count": url.click_count,
-      "expires_at": url.expires_at if url.expires_at else None
-    })
-  finally:
-    session.close()
-
-@main.route("/analytics/last-day")
-def clicks_last_day():
-  session = engine.SessionLocal()
-  try:
-    since = datetime.now(timezone.utc) - timedelta(days=1)
-    count = session.query(func.count()).filter(
-      Click.timestamp > since
-    ).scalar()
-  finally:
-    session.close()
-  return {"clicks_last_day": count}
-
-@main.route("api/analytics/referrers")
-def clicks_referrers():
-  session = engine.SessionLocal()
-  try:
-    results = ( session.query(Click.referrer, func.count(Click.id))
-                .group_by(Click.referrer).all()
-              )
-    results = [tuple(row) for row in results]
-  finally:
-    session.close()
-  return {"clicks_referrers": results}
 
 @main.app_errorhandler(404)
 def page_not_found():
