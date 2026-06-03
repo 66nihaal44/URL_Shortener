@@ -74,7 +74,7 @@ def shorten():
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 
-@main.route("/api/<short_code>/stats")
+@main.route("/api/<short_code>")
 @limiter.limit("30 per minute, 300 per hour")
 def stats(short_code):
   session = engine.SessionLocal()
@@ -83,12 +83,14 @@ def stats(short_code):
     if not url:
       return jsonify({"error": "URL not found"}), 404
     return jsonify({
+      "id": url.id,
       "original_url": url.original_url,
       "short_code": short_code,
       "created_at": url.created_at,
-      "age_seconds": (datetime.now(timezone.utc) - url.created_at).total_seconds(),
       "click_count": url.click_count,
-      "expires_at": url.expires_at if url.expires_at else None
+      "expires_at": url.expires_at if url.expires_at else None,
+      "hashed_password": url.hashed_password if url.hashed_password else None,
+      "age_seconds": (datetime.now(timezone.utc) - url.created_at).total_seconds()
     })
   finally:
     session.close()
