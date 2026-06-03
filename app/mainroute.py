@@ -129,7 +129,7 @@ def stats(short_code):
   try:
     url = session.query(URL).filter_by(short_code=short_code).first()
     if not url:
-      return render_template("404page.html"), 404
+      return jsonify({"error": "URL not found"}), 404
     return jsonify({
       "original_url": url.original_url,
       "short_code": short_code,
