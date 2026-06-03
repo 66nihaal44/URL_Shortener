@@ -19,7 +19,7 @@ pattern = re.compile(r'[A-Za-z0-9_-]+')
 domain_url = "https://url-shortener-g54n.onrender.com"
 main = Blueprint("main", __name__)
 
-@main.route("/shorten", methods=["POST"])
+@main.route("/api/urls", methods=["POST"])
 @limiter.limit("10 per minute, 100 per hour")
 def shorten():
   data = request.json
@@ -122,7 +122,7 @@ def redirect_handler(short_code):
     return render_template("password_prompt.html", shortCode = short_code)
   return redirect(url.original_url)
 
-@main.route("/stats/<short_code>")
+@main.route("/api/<short_code>/stats")
 @limiter.limit("30 per minute, 300 per hour")
 def stats(short_code):
   session = engine.SessionLocal()
@@ -153,7 +153,7 @@ def clicks_last_day():
     session.close()
   return {"clicks_last_day": count}
 
-@main.route("/analytics/referrers")
+@main.route("api/analytics/referrers")
 def clicks_referrers():
   session = engine.SessionLocal()
   try:
