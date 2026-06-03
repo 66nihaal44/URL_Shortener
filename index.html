@@ -56,7 +56,7 @@
         return;
     }*/
     try {
-        const res = await fetch(domainUrl + "/api/shorten", {
+        const res = await fetch(domainUrl + "/api/urls", {
             // NEW FEATURE: MAKE ERROR MESSAGES VISIBLE ON FRONTEND
             method: "POST",
             headers: { "Content-Type": "application/json" },
