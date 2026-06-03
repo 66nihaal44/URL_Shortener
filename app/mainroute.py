@@ -166,8 +166,8 @@ def redirect_handler(short_code):
   return redirect(url.original_url)
 
 @main.app_errorhandler(404)
-def page_not_found():
-  return render_template("404page.html"), 404
+def page_not_found(error):
+  return render_template("404page.html"), error
 
 base62 = string.ascii_letters + string.digits
 def gen_random_code(session, length = 6):
