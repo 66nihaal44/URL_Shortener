@@ -114,10 +114,10 @@ def clicks_referrers():
     results = (session.query(Click.referrer, func.count(Click.id))
                 .group_by(Click.referrer).all())
     results = [tuple(row) for row in results]
-    print("before dict()", results, flush = true)
+    print("before dict()", results, flush = True)
     results = {tuple for tuple in results if tuple[1] is not None}
     results = dict(results)
-    print("after dict()", results, flush = true)
+    print("after dict()", results, flush = True)
   finally:
     session.close()
   return {"clicks_referrers": results}
