@@ -115,7 +115,7 @@ def clicks_referrers():
                 .group_by(Click.referrer).all())
     results = [tuple(row) for row in results]
     print("before dict()", results, flush = True)
-    results = {tuple for tuple in results if tuple[1] is not None}
+    results = {tuple for tuple in results if tuple[0] is not None}
     results = dict(results)
     print("after dict()", results, flush = True)
   finally:
