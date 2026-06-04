@@ -74,7 +74,7 @@ def shorten():
          "short_url": f"{domain_url}/{short_code}"
          }), 201
 
-@main.route("/api/<short_code>")
+@main.route("/api/urls/<short_code>")
 @limiter.limit("30 per minute, 300 per hour")
 def stats(short_code):
   session = engine.SessionLocal()
