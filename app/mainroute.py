@@ -111,11 +111,13 @@ def clicks_last_day():
 def clicks_referrers():
   session = engine.SessionLocal()
   try:
-    results = ( session.query(Click.referrer, func.count(Click.id))
-                .group_by(Click.referrer).all()
-              )
+    results = (session.query(Click.referrer, func.count(Click.id))
+                .group_by(Click.referrer).all())
     results = [tuple(row) for row in results]
+    print("before dict()", results, flush = true)
+    results = {tuple for tuple in results if tuple[1] is not None}
     results = dict(results)
+    print("after dict()", results, flush = true)
   finally:
     session.close()
   return {"clicks_referrers": results}
