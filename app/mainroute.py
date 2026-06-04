@@ -114,10 +114,8 @@ def clicks_referrers():
     results = (session.query(Click.referrer, func.count(Click.id))
                 .group_by(Click.referrer).all())
     results = [tuple(row) for row in results]
-    print("before dict()", results, flush = True)
     results = {tuple for tuple in results if tuple[0] is not None}
     results = dict(results)
-    print("after dict()", results, flush = True)
   finally:
     session.close()
   return {"clicks_referrers": results}
@@ -138,7 +136,6 @@ def redirect_handler(short_code):
       if not password_check(cached_password, data["password"]):
         return jsonify({"error": "Incorrect Password"}), 401
         # add code for displaying that you typed incorrect password
-      log_click(short_code, referrer)
       return jsonify({"redirect": cached_url}), 200
     log_click(short_code, referrer)
     return redirect(cached_url)
@@ -160,7 +157,6 @@ def redirect_handler(short_code):
         # add code for displaying that you typed incorrect password
       redis_client.set(short_code, original_url, ex=3600) # 1 hour
       redis_client.set(short_code + ".password", url.hashed_password, ex=3600)
-      log_click(short_code, referrer=None)
       return jsonify({"redirect": cached_url}), 200
     redis_client.set(short_code, original_url, ex=3600) # 1 hour
     log_click(short_code, referrer=None)
