@@ -114,9 +114,8 @@ def clicks_referrers():
     results = ( session.query(Click.referrer, func.count(Click.id))
                 .group_by(Click.referrer).all()
               )
-    results = {dict(row) for row in results}
-  # create dictionary instead of tuples
-  #results = [tuple(row) for row in results]
+    results = [tuple(row) for row in results]
+    results = dict(results)
   finally:
     session.close()
   return {"clicks_referrers": results}
