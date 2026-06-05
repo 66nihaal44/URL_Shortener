@@ -95,7 +95,7 @@ def stats(short_code):
   finally:
     session.close()
 
-@main.route("/analytics/last-day")
+@main.route("/api/analytics/last-day")
 def clicks_last_day():
   session = engine.SessionLocal()
   try:
