@@ -138,6 +138,7 @@ def redirect_handler(short_code):
         # add code for displaying that you typed incorrect password
       return jsonify({"redirect": cached_url}), 200
     log_click(short_code, referrer)
+    # fix code so that password protected links get clicks logged
     return redirect(cached_url)
   session = engine.SessionLocal()
   try:
